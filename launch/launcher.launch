@@ -1,0 +1,15 @@
+<launch>
+	<remap from="/camera/color/image_raw" to="/camera_rect/image_rect"/>
+	<remap from="/camera/color/camera_info" to="/camera_rect/camera_info"/>
+
+	<include file="$(find astra_camera)/launch/dabai.launch" />
+        <include file="$(find apriltag_ros)/launch/continuous_detection.launch" />	
+	<include file="$(find limo_bringup)/launch/limo_start.launch" />
+	<include file="$(find limo_bringup)/launch/limo_navigation_diff.launch" />
+	<!-- <include file="$(find open_manipulator_controller)/launch/open_manipulator_controller.launch">
+		<arg name="usb_port" value="/dev/ttyUSB1" />
+	</include> -->
+
+	<!-- <node name="limo_atwork_node" pkg="limo_atwork" type="limo_atwork_node.py"/> -->	
+	
+</launch>

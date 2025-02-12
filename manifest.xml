@@ -1,0 +1,18 @@
+<package>
+  <description brief="limo_atwork">
+
+     limo_atwork
+
+  </description>
+  <author>agilex</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/limo_atwork</url>
+  <depend package="std_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="move_base_msgs"/>
+  <depend package="open_manipulator_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+
+</package>
