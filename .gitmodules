@@ -1,0 +1,15 @@
+[submodule "apriltag_ros"]
+	path = apriltag_ros
+	url = https://github.com/Adlink-ROS/apriltag_ros.git
+	branch = foxy-devel
+[submodule "open_manipulator"]
+	path = open_manipulator
+	url = https://github.com/ROBOTIS-GIT/open_manipulator.git
+	branch = foxy-devel
+[submodule "limo_ros2"]
+	path = limo_ros2
+	url = https://github.com/UruBots/limo_ros2.git
+	branch = foxy
+[submodule "apriltag"]
+	path = apriltag
+	url = https://github.com/AprilRobotics/apriltag.git

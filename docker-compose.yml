@@ -1,0 +1,14 @@
+services:
+  limo_work:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile
+    container_name: limo_work
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.Xauthority:/root/.Xauthority
+      - .:/root/limo_ws/src
+    environment:
+      - DISPLAY=$DISPLAY
+      - LIBGL_ALWAYS_SOFTWARE=1 
+    command: tail -f /dev/null
