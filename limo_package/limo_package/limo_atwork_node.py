@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import time
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
@@ -17,12 +17,12 @@ class LimoAtWorkNode(Node):
         initialpose_msg = PoseWithCovarianceStamped()
         initialpose_msg.header.stamp = self.get_clock().now().to_msg()
         initialpose_msg.header.frame_id = 'map'
-        initialpose_msg.pose.pose.position.x = 1.0
-        initialpose_msg.pose.pose.position.y = 2.0
+        initialpose_msg.pose.pose.position.x = -0.5983487367630005
+        initialpose_msg.pose.pose.position.y = -0.22845134139060974
         initialpose_msg.pose.pose.position.z = 0.0
         initialpose_msg.pose.pose.orientation.x = 0.0
         initialpose_msg.pose.pose.orientation.y = 0.0
-        initialpose_msg.pose.pose.orientation.z = 0.0
+        initialpose_msg.pose.pose.orientation.z = 0.01985396360196744
         initialpose_msg.pose.pose.orientation.w = 1.0
         initialpose_msg.pose.covariance = [
             0.25, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -32,8 +32,11 @@ class LimoAtWorkNode(Node):
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942
         ]
-
-        self.initial_pub.publish(initialpose_msg)
+        time.sleep(1.0)  # Wait for the publisher to be ready
+        for i in range(10):
+            self.initial_pub.publish(initialpose_msg)
+            time.sleep(0.1)
+        # self.initial_pub.publish(initialpose_msg)
         self.get_logger().info('Published initialpose once.')
 
     def publish_goal_pose(self, x, y, z, orientation):
@@ -47,7 +50,11 @@ class LimoAtWorkNode(Node):
         goal_msg.pose.orientation.y = orientation.y
         goal_msg.pose.orientation.z = orientation.z
         goal_msg.pose.orientation.w = orientation.w
-        self.goal_pub.publish(goal_msg)
+        
+        time.sleep(1.0)  # Wait for the publisher to be ready
+        for i in range(10):
+            self.goal_pub.publish(goal_msg)
+            time.sleep(0.1)
         self.get_logger().info('Published goal_pose.')
 
     def set_goal(self, x, y, z, orientation):
@@ -55,8 +62,11 @@ class LimoAtWorkNode(Node):
         self.get_logger().info('Goal set to: x={}, y={}, z={}'.format(x, y, z))
 
     def mission_controller(self):
+        orientation = PoseStamped().pose.orientation
+        orientation.z = -0.7169632618807529
+        orientation.w = 0.6970562528027344
         # Example of setting a goal
-        self.set_goal(5.0, 5.0, 0.0, PoseStamped().pose.orientation)
+        self.set_goal(2.035064697265625, -1.3726273775100708, 0.0, orientation)
         self.get_logger().info('Mission controller running.')
 
     def move_arm(self, x, y, z):
