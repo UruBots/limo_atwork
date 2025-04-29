@@ -4,7 +4,11 @@
 ```
 source /opt/ros/foxy/setup.sh && rosdep install --from-paths src --ignore-src -r -y
 ```
-Filter packages
+### Filter packages
 ```
 colcon build --symlink-install --packages-select limo_ros2 limo_package
+```
+### Run limo_atwork Node
+```
+ros2 launch limo_package limoatwork.launch.py
 ```
