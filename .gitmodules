@@ -16,7 +16,3 @@
 [submodule "OrbbecSDK_ROS2"]
 	path = OrbbecSDK_ROS2
 	url = https://github.com/orbbec/OrbbecSDK_ROS2.git
-[submodule "robotis_manipulator"]
-	path = robotis_manipulator
-	url = https://github.com/ROBOTIS-GIT/robotis_manipulator.git
-	branch = ros2
