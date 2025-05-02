@@ -10,6 +10,11 @@ source /opt/ros/foxy/setup.sh && rosdep install --from-paths src --ignore-src -r
 ```
 colcon build --symlink-install --packages-select limo_ros2 limo_package
 ```
+### Build packages with gcc 9
+```
+colcon build --cmake-force-configure \
+  --cmake-args -DCMAKE_C_COMPILER=/usr/bin/gcc-10 -DCMAKE_CXX_COMPILER=/usr/bin/g++-10
+```
 ### Run limo_atwork Node
 ```
 ros2 launch limo_package limoatwork.launch.py

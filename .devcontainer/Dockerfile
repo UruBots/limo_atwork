@@ -9,6 +9,10 @@ RUN apt-get update && \
     gazebo9 \
     gazebo9-common \
     libgazebo9-dev \
+    ros-foxy-gazebo-ros-pkgs \
+    ros-foxy-gazebo-ros \
+    ros-foxy-gazebo-dev \
+    ros-foxy-gazebo-plugins \
     && apt-get clean
 
 # Install ROS 2 packages
