@@ -19,6 +19,17 @@ colcon build --symlink-install --packages-select limo_ros2 limo_package
 colcon build --cmake-force-configure \
   --cmake-args -DCMAKE_C_COMPILER=/usr/bin/gcc-10 -DCMAKE_CXX_COMPILER=/usr/bin/g++-10
 ```
+#### Create 2d map
+```
+```
+
+### Create 3d map
+```
+```
+### Start
+```
+ros2 launch limo_package start.launch.py
+```
 ### Run limo_atwork Node
 ```
 ros2 launch limo_package limoatwork.launch.py
