@@ -4,7 +4,6 @@
 ```
 git clone --recurse-submodules -b ros2-foxy https://github.com/UruBots/limo_atwork.git
 ```
-
 ### Install
 ```
 wget https://raw.githubusercontent.com/ROBOTIS-GIT/open_manipulator/foxy-devel/open_manipulator_x.repos
@@ -23,6 +22,10 @@ colcon build --cmake-force-configure \
 ### Run limo_atwork Node
 ```
 ros2 launch limo_package limoatwork.launch.py
+```
+### Run limo_atrescue Node
+```
+ros2 launch limo_package limoatrescue.launch.py
 ```
 ### Kill ROS2 Process
 ```
