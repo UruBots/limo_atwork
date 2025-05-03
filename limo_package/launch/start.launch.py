@@ -1,5 +1,6 @@
 import os
 from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource, AnyLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
@@ -12,13 +13,15 @@ def generate_launch_description():
     manipulator_dir = get_package_share_directory('open_manipulator_x_controller')
     yolo_ros_dir = get_package_share_directory('yolo_ros')
 
-    is_work = DeclareLaunchArgument(
-        'is_work',
-        default_value='true',
-        description='Whether to launch Working mode or not'
-    )
+    # params
+    is_work = LaunchConfiguration('is_work', default='true')
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'is_work',
+            default_value=is_work,
+            description='Flag to indicate if the robot in work or rescue'),
+        # Lanzar el controlador de Limo
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(limo_bringup_dir, 'launch', 'limo_start.launch.py')
@@ -46,7 +49,6 @@ def generate_launch_description():
                 os.path.join(manipulator_dir, 'launch', 'open_manipulator_x_controller.launch.py')
             )
         ),
-
         # Launch YOLO detection
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
