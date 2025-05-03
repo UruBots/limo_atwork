@@ -11,7 +11,7 @@ def generate_launch_description():
     astra_camera_dir = get_package_share_directory('astra_camera')
     apriltag_ros_dir = get_package_share_directory('apriltag_ros')
     manipulator_dir = get_package_share_directory('open_manipulator_x_controller')
-    yolo_ros_dir = get_package_share_directory('yolo_ros')
+    yolo_ros_dir = get_package_share_directory('yolo_bringup')
 
     # params
     is_work = LaunchConfiguration('is_work', default='true')
@@ -52,12 +52,12 @@ def generate_launch_description():
         # Launch YOLO detection
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(yolo_ros_dir, 'launch', 'yolo.launch.py')
+                os.path.join(yolo_ros_dir, 'launch', 'yolov8.launch.py')
             ),
             launch_arguments={
-                'model_path': os.path.join(yolo_ros_dir, 'models', 'yolov8n.pt'),
-                'image_topic': '/camera/color/image_raw',  # or your topic from astra_camera
-                'visualize': 'true'
+                'model': os.path.join(yolo_ros_dir, 'models', 'yolov8n.pt'),
+                'input_image_topic': '/camera/color/image_raw',  # or your topic from astra_camera
+                'use_3d': 'true'
             }.items(),
             condition=IfCondition(is_work)
         )
