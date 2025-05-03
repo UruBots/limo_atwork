@@ -9,7 +9,7 @@ def generate_launch_description():
     limo_bringup_dir = get_package_share_directory('limo_bringup')
     astra_camera_dir = get_package_share_directory('astra_camera')
     apriltag_ros_dir = get_package_share_directory('apriltag_ros')
-    manipulator_dir = get_package_share_directory('open_manipulator_controller')
+    manipulator_dir = get_package_share_directory('open_manipulator_x_controller')
     yolo_ros_dir = get_package_share_directory('yolo_ros')
 
     is_work = DeclareLaunchArgument(
@@ -43,7 +43,7 @@ def generate_launch_description():
         # Lanzar el manipulador
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(manipulator_dir, 'launch', 'open_manipulator_controller.launch.py')
+                os.path.join(manipulator_dir, 'launch', 'open_manipulator_x_controller.launch.py')
             )
         ),
 
