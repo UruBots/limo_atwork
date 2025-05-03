@@ -1,28 +1,12 @@
 #!/usr/bin/env python3
 import time
 import rclpy
-import numpy as np
-import cv2
 from rclpy.node import Node
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from apriltag_msgs.msg import AprilTagDetectionArray
-from vision_msgs.msg import Detection2DArray
-from cv_bridge import CvBridge
 
-K = [[602.71, 0, 351.30],
-     [0, 601.63, 240.09],
-     [0, 0, 1]]
-D = [0.0671, -0.2636, 0.0064, 0.0111, 0]
-
-def px2xy(point, camera_k, camera_d, z=1.0):
-    MK = np.array(camera_k, dtype=float).reshape(3,3)
-    MD = np.array(camera_d, dtype=float)
-    point = np.array([[point]], dtype=float)
-    pts_uv = cv2.undistortPoints(point, MK, MD) * z
-    return pts_uv[0][0]
-
-class LimoAtWorkNode(Node):
+class LimoAtRescueNode(Node):
     def __init__(self):
         super().__init__('limo_atwork_node')
         self.initial_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
@@ -32,12 +16,6 @@ class LimoAtWorkNode(Node):
             AprilTagDetectionArray,
             '/tag_detections',
             self.read_april_tags,
-            10
-        )
-        self.yolo_detect = self.create_subscription(
-            Detection2DArray,
-            '/yolov8/detections',
-            self.yolo_callback,
             10
         )
         self.get_logger().info('Limo At Work node started.')
@@ -140,46 +118,10 @@ class LimoAtWorkNode(Node):
         # Placeholder for reading robot and moving logic
         self.get_logger().info('Reading robot and moving.')
 
-    def yolo_callback(self, msg):
-        # Placeholder for YOLO callback logic
-        self.get_logger().info('YOLO callback triggered.')
-        if not msg.detections:
-            return
-        # Procesar detecciones        
-        for detection in msg.detections:
-            bbox = detection.bbox.center
-            pixel = [bbox.x, bbox.y]
-            # Asumimos una profundidad (por ejemplo, 1 metro)
-            z = 1.0
-            x, y = px2xy(pixel, K, D, z)
-
-            self.get_logger().info(f'Pixel {pixel} -> XY: ({x:.2f}, {y:.2f}) at Z={z}m')
-
-            # Obtener clase del objeto (si existe al menos una hipótesis)
-            if detection.results:
-                class_id = detection.results[0].hypothesis.class_id
-                score = detection.results[0].hypothesis.score
-                self.get_logger().info(
-                    f'Detección: Clase="{class_id}", Score={score:.2f}, Pixel=({bbox.x:.1f},{bbox.y:.1f}) → XY=({x:.2f},{y:.2f}), Z={z:.2f}m'
-                )
-            else:
-                self.get_logger().warn('Detección sin hipótesis de clase.')
-
-            # Agregar la lógica para mover el brazo según la detección, por ejemplo:
-            # self.set_goal(x,y,z,orientation)
-            # self.move_arm(x, y, z)
-            # self.open_manipulator()
-            # time.sleep(1)  # Esperar un segundo entre movimientos
-            # self.close_manipulator()
-            # time.sleep(1)  # Esperar un segundo antes de cerrar el manipulador
-            # self.move_arm(0, 0, 0)  # Regresar a la posición inicial
-            # self.get_logger().info('Manipulador movido y cerrado.')
-
-
 def main(args=None):
     rclpy.init(args=args)
     try:
-        node = LimoAtWorkNode()
+        node = LimoAtRescueNode()
         node.mission_controller()
         rclpy.spin(node)
     except KeyboardInterrupt:

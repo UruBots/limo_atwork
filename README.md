@@ -1,5 +1,10 @@
 # limo_atwork
 
+### Clone repository
+```
+git clone --recurse-submodules -b ros2-foxy https://github.com/UruBots/limo_atwork.git
+```
+
 ### Install
 ```
 wget https://raw.githubusercontent.com/ROBOTIS-GIT/open_manipulator/foxy-devel/open_manipulator_x.repos

@@ -9,6 +9,7 @@ def generate_launch_description():
     astra_camera_dir = get_package_share_directory('astra_camera')
     apriltag_ros_dir = get_package_share_directory('apriltag_ros')
     manipulator_dir = get_package_share_directory('open_manipulator_controller')
+    yolo_ros_dir = get_package_share_directory('yolo_ros')
 
     return LaunchDescription([
         IncludeLaunchDescription(
@@ -37,5 +38,17 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 os.path.join(manipulator_dir, 'launch', 'open_manipulator_controller.launch.py')
             )
+        ),
+
+        # Launch YOLO detection
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(yolo_ros_dir, 'launch', 'yolo.launch.py')
+            ),
+            launch_arguments={
+                'model_path': os.path.join(yolo_ros_dir, 'models', 'yolo_v8.pt'),
+                'image_topic': '/camera/color/image_raw',  # or your topic from astra_camera
+                'visualize': 'true'
+            }.items()
         )
     ])

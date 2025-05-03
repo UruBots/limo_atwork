@@ -16,3 +16,6 @@
 [submodule "ros2_astra_camera"]
 	path = ros2_astra_camera
 	url = https://github.com/orbbec/ros2_astra_camera.git
+[submodule "yolo_ros"]
+	path = yolo_ros
+	url = https://github.com/UruBots/yolo_ros.git

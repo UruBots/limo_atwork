@@ -36,7 +36,6 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     python3-pip \
     ros-foxy-dynamixel-workbench-toolbox \
-    # ros-foxy-robotis-manipulator \
     && rm -rf /var/lib/apt/lists/*
 
 

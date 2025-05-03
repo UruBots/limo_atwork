@@ -24,7 +24,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'limo_atwork_node = limo_package.limo_atwork_node:main',  # Cambiado a la ruta correcta
+            'limo_atwork_node = limo_package.limo_atwork_node:main',
+            'limo_atrescue_node = limo_package.limo_atrescue_node:main',
         ],
     },
 )
