@@ -1,8 +1,9 @@
+import os
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource, AnyLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
-import os
+from launch.conditions import IfCondition
 
 def generate_launch_description():
     limo_bringup_dir = get_package_share_directory('limo_bringup')
@@ -10,6 +11,12 @@ def generate_launch_description():
     apriltag_ros_dir = get_package_share_directory('apriltag_ros')
     manipulator_dir = get_package_share_directory('open_manipulator_controller')
     yolo_ros_dir = get_package_share_directory('yolo_ros')
+
+    is_work = DeclareLaunchArgument(
+        'is_work',
+        default_value='true',
+        description='Whether to launch Working mode or not'
+    )
 
     return LaunchDescription([
         IncludeLaunchDescription(
@@ -46,9 +53,10 @@ def generate_launch_description():
                 os.path.join(yolo_ros_dir, 'launch', 'yolo.launch.py')
             ),
             launch_arguments={
-                'model_path': os.path.join(yolo_ros_dir, 'models', 'yolo_v8.pt'),
+                'model_path': os.path.join(yolo_ros_dir, 'models', 'yolov8n.pt'),
                 'image_topic': '/camera/color/image_raw',  # or your topic from astra_camera
                 'visualize': 'true'
-            }.items()
+            }.items(),
+            condition=IfCondition(is_work)
         )
     ])
