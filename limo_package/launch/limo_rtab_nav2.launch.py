@@ -10,14 +10,15 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    limo_package_dir = get_package_share_directory('limo_package')
     limo_bringup_dir = get_package_share_directory('limo_bringup')
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
-    map_yaml_path = LaunchConfiguration('map',default=os.path.join(limo_bringup_dir,'maps','map01.yaml'))
-    nav2_param_path = LaunchConfiguration('params_file',default=os.path.join(limo_bringup_dir,'param','nav2_ackermann_rtab.yaml'))
+    map_yaml_path = LaunchConfiguration('map',default=os.path.join(limo_bringup_dir,'maps','map.yaml'))
+    nav2_param_path = LaunchConfiguration('params_file',default=os.path.join(limo_package_dir,'param','nav2_ackermann_rtab.yaml'))
 
-    rviz_config_dir = os.path.join(limo_bringup_dir,'rviz','nav2_rtab.rviz')
+    rviz_config_dir = os.path.join(limo_package_dir,'rviz','nav2_rtab.rviz')
 
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time',default_value=use_sim_time,description='Use simulation (Gazebo) clock if true'),

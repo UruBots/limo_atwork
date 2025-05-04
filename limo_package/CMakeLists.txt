@@ -27,7 +27,7 @@ ament_python_install_package(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Install launch and param files
 install(
-  DIRECTORY launch
+  DIRECTORY launch rviz
   DESTINATION share/${PROJECT_NAME}/
 )
 

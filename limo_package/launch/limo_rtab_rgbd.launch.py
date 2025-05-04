@@ -45,21 +45,44 @@ def generate_launch_description():
     qos = LaunchConfiguration('qos')
     localization = LaunchConfiguration('localization')
 
-    parameters={
-          'frame_id':'base_link',
+    #     parameters={
+    #       'frame_id':'base_link',
+    #       'use_sim_time':False,
+    #       'subscribe_depth':True,
+    #       'subscribe_rgbd':False,
+    #       'subscribe_rgb':True,
+    #       'subscribe_scan':True,
+    #       'use_action_for_goal':True,
+    #       'wait_for_transform':0.2,
+    #       'qos_image':qos,
+    #       'qos_scan':qos,
+    #       'qos_camera_info':qos,
+    #       'approx_sync':True,
+    #       'Reg/Force3DoF':'true',
+    #       'Optimizer/GravitySigma':'0' # Disable imu constraints (we are already in 2D)
+    # }
+
+    rtabmap_parameters={
           'use_sim_time':False,
-          'subscribe_depth':True,
-          'subscribe_rgbd':False,
-          'subscribe_rgb':True,
+          'subscribe_rgbd':True,
           'subscribe_scan':True,
           'use_action_for_goal':True,
-          'wait_for_transform':0.2,
-          'qos_image':qos,
-          'qos_scan':qos,
-          'qos_camera_info':qos,
-          'approx_sync':True,
+          'odom_sensor_sync': True,
+          # RTAB-Map's parameters should be strings:
+          'Mem/NotLinkedNodesKept':'false',
+          'subscribe_depth': True,
+          'subscribe_rgb': True,
+    }
+
+    # Shared parameters between different nodes
+    shared_parameters={
+          'frame_id':'base_link',
+        #   'use_sim_time':use_sim_time,
+          # RTAB-Map's parameters should be strings:
+          'Reg/Strategy':'1',
           'Reg/Force3DoF':'true',
-          'Optimizer/GravitySigma':'0' # Disable imu constraints (we are already in 2D)
+          'Mem/NotLinkedNodesKept':'false',
+          'Icp/PointToPlaneMinComplexity':'0.04' # to be more robust to long corridors with low geometry
     }
 
     remappings=[
@@ -95,7 +118,7 @@ def generate_launch_description():
         Node(
             condition=UnlessCondition(localization),
             package='rtabmap_slam', executable='rtabmap', output='screen',
-            parameters=[parameters],
+            parameters=[rtabmap_parameters, shared_parameters],
             remappings=remappings,
             arguments=['-d']), # This will delete the previous database (~/.ros/rtabmap.db)
             
@@ -103,14 +126,13 @@ def generate_launch_description():
         Node(
             condition=IfCondition(localization),
             package='rtabmap_slam', executable='rtabmap', output='screen',
-            parameters=[parameters,
-              {'Mem/IncrementalMemory':'False',
+            parameters=[rtabmap_parameters, shared_parameters, {'Mem/IncrementalMemory':'False',
                'Mem/InitWMWithAllNodes':'True'}],
             remappings=remappings),
 
         Node(
             package='rtabmap_viz', executable='rtabmap_viz', output='screen',
-            parameters=[parameters],
+            parameters=[rtabmap_parameters, shared_parameters],
             remappings=remappings),
         base_link_to_camera_node
     ])

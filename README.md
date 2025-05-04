@@ -21,10 +21,20 @@ colcon build --cmake-force-configure \
 ```
 #### Create 2d map
 ```
+sudo apt-get install ros-foxy-rtabmap-ros
+ros2 launch limo_bringup limo_start.launch.py
+ros2 launch limo_bringup cartographer.launch.py
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
+
+ros2 run nav2_map_server map_saver_cli -f map
 ```
 
 ### Create 3d map
 ```
+ros2 launch limo_bringup limo_start.launch.py
+ros2 launch orbbec_camera dabai.launch.py 
+ros2 launch limo_package limo_rtab_rgbd.launch.py 
+ros2 run teleop_twist_keyboard teleop_twist_keyboard 
 ```
 ### Start
 ```
