@@ -65,13 +65,17 @@ def generate_launch_description():
     rtabmap_parameters={
           'use_sim_time':False,
           'subscribe_rgbd':True,
+          'subscribe_rgb':True,
           'subscribe_scan':True,
           'use_action_for_goal':True,
-          'odom_sensor_sync': True,
+          'odom_sensor_sync': False,
           # RTAB-Map's parameters should be strings:
           'Mem/NotLinkedNodesKept':'false',
           'subscribe_depth': True,
           'subscribe_rgb': True,
+          'wait_for_transform':0.2,
+          'queue_size': 20,
+          'approx_sync':True
     }
 
     # Shared parameters between different nodes
@@ -88,14 +92,45 @@ def generate_launch_description():
     remappings=[
           ('odom','/odom'),
           ('scan','/scan'),
-          ('rgb/image', '/camera/color/image_raw'),
-          ('rgb/camera_info', '/camera/color/camera_info'),
-          ('depth/image', '/camera/depth/image_raw')]
+          ('rgb/image', '/camera/camera/color/image_raw'),
+          ('rgb/camera_info', '/camera/camera/color/camera_info'),
+          ('depth/image', '/camera/camera/depth/image_raw')
+    ]
+
     base_link_to_camera_node = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
         name='base_link_to_base_camera',
         arguments=['0.1','0','0.18','0','0','0','1','base_link','camera_link']
+    )
+
+    realsense_node = Node(
+        package='realsense2_camera',
+        executable='realsense2_camera_node',
+        name='camera',
+        output='screen',
+        parameters=[{
+            'frame_id': 'camera_link',
+            'enable_rgbd': True,
+            'enable_sync': True,
+            'enable_depth': True,
+            'enable_color': True,
+            'align_depth.enable': True,
+            'depth_module.depth_profile': '640x480x30',
+            'rgb_camera.profile': '640x480x30',
+            'color_depth_aligned': True,
+            'enable_infra1': False,
+            'enable_infra2': False,
+        }]
+    )
+
+    rgbd_sync_node = Node(
+        package='rtabmap_sync',
+        executable='rgbd_sync',
+        name='rgbd_sync',
+        output='screen',
+        parameters=[rtabmap_parameters, shared_parameters],
+        remappings=remappings
     )
     return LaunchDescription([
 
@@ -113,7 +148,7 @@ def generate_launch_description():
             description='Launch in localization mode.'),
 
         # Nodes to launch
-        
+        realsense_node,        
         # SLAM mode:
         Node(
             condition=UnlessCondition(localization),
@@ -130,6 +165,13 @@ def generate_launch_description():
                'Mem/InitWMWithAllNodes':'True'}],
             remappings=remappings),
 
+        # # Nodes to launch
+        # Node(
+        #     package='rtabmap_sync', executable='rgbd_sync', output='screen',
+        #     parameters=[rtabmap_parameters, shared_parameters],
+        #     remappings=remappings),
+
+        rgbd_sync_node,
         Node(
             package='rtabmap_viz', executable='rtabmap_viz', output='screen',
             parameters=[rtabmap_parameters, shared_parameters],
